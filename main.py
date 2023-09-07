@@ -1,5 +1,3 @@
-from typing import Union
-
 import cv2
 import numpy as np
 import torch
@@ -26,12 +24,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# request input
-# убрать привязку к конкретной картинке
 test_image = cv2.imread("test.png", cv2.IMREAD_GRAYSCALE)
 test_image = cv2.resize(test_image, (28, 28))
 test_image = test_image.tobytes()
-# объекдинить
 
 
 class RequestInput(BaseModel):
@@ -61,7 +56,8 @@ async def predict(request: RequestInput = Depends()):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=1488)
+    uvicorn.run(app, host='127.0.0.1', port=1488)
+    # uvicorn.run(app)
 
 # @app.get("/predict/{string}")
 # def read_item(string: str):
