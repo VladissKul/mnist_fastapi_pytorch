@@ -3,9 +3,10 @@ from typing import Union
 import cv2
 import numpy as np
 import torch
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import uvicorn
 
 from model.classify_model import MNIST_Classify_Model, DataPreprocessing
 
@@ -43,7 +44,7 @@ async def index():
 
 
 @app.get("/predict")
-async def predict(request: RequestInput):
+async def predict(request: RequestInput = Depends()):
     print(request.input)
     request_input = DataPreprocessing(
         target_datatype=np.float32,
@@ -57,6 +58,10 @@ async def predict(request: RequestInput):
     prediction = np.argmax(prediction, axis=1)
 
     return {"prediction": prediction.tolist()}
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, host='0.0.0.0', port=1488)
 
 # @app.get("/predict/{string}")
 # def read_item(string: str):
