@@ -40,7 +40,7 @@ async def index():
     return {"Message": ["Hello World"]}
 
 
-@app.post("/predict")
+@app.get("/predict")
 async def predict(request: RequestInput):
     print(request.input)
     request_input = DataPreprocessing(
