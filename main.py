@@ -1,3 +1,5 @@
+from typing import Union
+
 import cv2
 import numpy as np
 import torch
@@ -55,3 +57,7 @@ async def predict(request: RequestInput):
     prediction = np.argmax(prediction, axis=1)
 
     return {"prediction": prediction.tolist()}
+
+# @app.get("/predict/{string}")
+# def read_item(string: str):
+#     return {"new_string": 'answer_s' + string, "old_string": string}
