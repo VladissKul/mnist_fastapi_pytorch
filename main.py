@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import torch
-from fastapi import FastAPI, Depends
+import uvicorn
+from fastapi import FastAPI, Depends, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
 
 from model.classify_model import MNIST_Classify_Model, DataPreprocessing
 
@@ -53,6 +53,11 @@ async def predict(request: RequestInput = Depends()):
     prediction = np.argmax(prediction, axis=1)
 
     return {"prediction": prediction.tolist()}
+
+
+@app.post("/file/upload-file")
+def upload_file(file: UploadFile):
+    return file
 
 
 if __name__ == '__main__':
