@@ -1,8 +1,11 @@
+import os
+import tempfile
+
 import cv2
 import numpy as np
 import torch
 import uvicorn
-from fastapi import FastAPI, Depends, UploadFile
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -24,9 +27,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-test_image = cv2.imread("test.png", cv2.IMREAD_GRAYSCALE)
-test_image = cv2.resize(test_image, (28, 28))
-test_image = test_image.tobytes()
+
+
+def preprocess_image(image):
+    image = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
+    image = cv2.resize(image, (28, 28))
+    image = image.tobytes()
+    return image
 
 
 class RequestInput(BaseModel):
@@ -38,26 +45,49 @@ async def index():
     return {"Message": ["Hello World"]}
 
 
-@app.get("/predict")
-async def predict(request: RequestInput = Depends()):
-    print(request.input)
+# @app.post("/predict")
+# async def predict(request: RequestInput = Depends()):
+#     print(request.input)
+#     request_input = DataPreprocessing(
+#         target_datatype=np.float32,
+#         image_width=IMAGE_WIDTH,
+#         image_height=IMAGE_HEIGHT,
+#         image_channel=IMAGE_CHANNEL,
+#     )(image)
+#
+#     prediction = CLASSIFY_MODEL(torch.tensor(request_input).to(device))
+#     prediction = prediction.cpu().detach().numpy()
+#     prediction = np.argmax(prediction, axis=1)
+#
+#     return {"prediction": prediction.tolist()}
+
+
+@app.post("/predict")
+async def predict(image: UploadFile):
+    with tempfile.NamedTemporaryFile(delete=False) as temp_image:
+        temp_image.write(await image.read())
+        temp_image_path = temp_image.name
+
+    preprocessed_image = preprocess_image(temp_image_path)
     request_input = DataPreprocessing(
         target_datatype=np.float32,
         image_width=IMAGE_WIDTH,
         image_height=IMAGE_HEIGHT,
         image_channel=IMAGE_CHANNEL,
-    )(test_image)
+    )(preprocessed_image)
 
     prediction = CLASSIFY_MODEL(torch.tensor(request_input).to(device))
     prediction = prediction.cpu().detach().numpy()
     prediction = np.argmax(prediction, axis=1)
 
+    os.remove(temp_image_path)
+
     return {"prediction": prediction.tolist()}
 
 
-@app.post("/file/upload-file")
-def upload_file(file: UploadFile):
-    return file
+# @app.post("/file/upload-file")
+# def upload_file(file: UploadFile):
+#     return file
 
 
 if __name__ == '__main__':
