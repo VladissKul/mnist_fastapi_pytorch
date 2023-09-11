@@ -63,3 +63,10 @@ if __name__ == '__main__':
 # @app.get("/predict/{string}")
 # def read_item(string: str):
 #     return {"new_string": 'answer_s' + string, "old_string": string}
+
+# ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+
+# docker run --rm -p  8000:1488 mnist-service
+
+# проброска томом модель, изображения в двух разных томах
+# картинка параметр в пути
