@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import torch
 import uvicorn
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Path
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -89,6 +89,22 @@ async def predict(image: UploadFile):
 # def upload_file(file: UploadFile):
 #     return file
 
+@app.get("/predict_from_path/{image_path}")
+async def predict_from_path(image_path: str = Path(..., description="Путь к изображению")):
+    preprocessed_image = preprocess_image(image_path)
+
+    request_input = DataPreprocessing(
+        target_datatype=np.float32,
+        image_width=IMAGE_WIDTH,
+        image_height=IMAGE_HEIGHT,
+        image_channel=IMAGE_CHANNEL,
+    )(preprocessed_image)
+
+    prediction = CLASSIFY_MODEL(torch.tensor(request_input).to(device))
+    prediction = prediction.cpu().detach().numpy()
+    prediction = np.argmax(prediction, axis=1)
+
+    return {"prediction": prediction.tolist()}
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=1488)
@@ -104,4 +120,3 @@ if __name__ == '__main__':
 # docker run --rm -p  8000:1488 mnist-service
 
 # проброска томом модель, изображения в двух разных томах
-# картинка параметр в пути
