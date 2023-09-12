@@ -112,6 +112,6 @@ if __name__ == '__main__':
 
 # docker run --rm -p  8000:1488 mnist-service
 
-# docker build -t mnist-service .
+# docker run --rm -p 8000:1488 -v D:\Projects\fastapi_torch\model:/app/model mnist-service
 
-# проброска томом модель, изображения в двух разных томах
+# docker build -t mnist-service .
