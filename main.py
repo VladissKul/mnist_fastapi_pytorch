@@ -45,23 +45,6 @@ async def index():
     return {"Message": ["Hello World"]}
 
 
-# @app.post("/predict")
-# async def predict(request: RequestInput = Depends()):
-#     print(request.input)
-#     request_input = DataPreprocessing(
-#         target_datatype=np.float32,
-#         image_width=IMAGE_WIDTH,
-#         image_height=IMAGE_HEIGHT,
-#         image_channel=IMAGE_CHANNEL,
-#     )(image)
-#
-#     prediction = CLASSIFY_MODEL(torch.tensor(request_input).to(device))
-#     prediction = prediction.cpu().detach().numpy()
-#     prediction = np.argmax(prediction, axis=1)
-#
-#     return {"prediction": prediction.tolist()}
-
-
 @app.post("/predict")
 async def predict(image: UploadFile):
     with tempfile.NamedTemporaryFile(delete=False) as temp_image:
@@ -85,7 +68,7 @@ async def predict(image: UploadFile):
     return {"prediction": prediction.tolist()}
 
 
-@app.get("/predict_from_path/{image_path}")
+@app.get("/predict_image/{image_path:path}")
 async def predict_from_path(image_path: str = Path(..., description="Путь к изображению")):
     preprocessed_image = preprocess_image(image_path)
 
@@ -112,6 +95,8 @@ if __name__ == '__main__':
 
 # docker run --rm -p  8000:1488 mnist-service
 
-# docker run --rm -p 8000:1488 -v D:\Projects\fastapi_torch\model:/app/model mnist-service
+# docker run --rm -p 8000:1488 -v D:\Projects\fastapi_torch\model:/app/model -v D:\Projects\fastapi_torch\images:/app/images mnist-service
 
 # docker build -t mnist-service .
+
+# uvicorn main:app --reload
