@@ -1,6 +1,6 @@
 FROM python:3.8
 
-RUN pip install fastapi uvicorn opencv-python-headless torch numpy
+RUN pip install fastapi uvicorn python-multipart opencv-python-headless torch numpy
 
 EXPOSE 1488
 

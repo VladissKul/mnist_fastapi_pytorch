@@ -85,10 +85,6 @@ async def predict(image: UploadFile):
     return {"prediction": prediction.tolist()}
 
 
-# @app.post("/file/upload-file")
-# def upload_file(file: UploadFile):
-#     return file
-
 @app.get("/predict_from_path/{image_path}")
 async def predict_from_path(image_path: str = Path(..., description="Путь к изображению")):
     preprocessed_image = preprocess_image(image_path)
@@ -106,17 +102,16 @@ async def predict_from_path(image_path: str = Path(..., description="Путь к
 
     return {"prediction": prediction.tolist()}
 
+
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=1488)
     # uvicorn.run(app, host='127.0.0.1', port=1488)
     # uvicorn.run(app)
 
-# @app.get("/predict/{string}")
-# def read_item(string: str):
-#     return {"new_string": 'answer_s' + string, "old_string": string}
-
 # ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 
 # docker run --rm -p  8000:1488 mnist-service
+
+# docker build -t mnist-service .
 
 # проброска томом модель, изображения в двух разных томах
