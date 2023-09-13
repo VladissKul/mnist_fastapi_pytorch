@@ -101,7 +101,6 @@ if __name__ == '__main__':
 
 # uvicorn main:app --reload
 
-# requirements dockerfile с версиями
 
 # создать ядро mnist-service создать подпапку в kernels
 
