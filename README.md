@@ -32,3 +32,5 @@ class RequestInput(BaseModel):
 ```
 
 Please note that the code for applying the model will vary depending on the API requirements, so make sure to customize it accordingly.
+
+docker run --name mnist_cont --rm -p 1488:1488 -ti -v /home/vladislav.kulakov/work/projects/mnist_service/images:/root/work/images -v /home/vladislav.kulakov/work/projects/mnist_service/model:/root/work/model 068eb0dca8e9
