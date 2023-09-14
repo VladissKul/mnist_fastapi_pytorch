@@ -91,8 +91,6 @@ if __name__ == '__main__':
 
 # ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 
-# docker run --rm -p  8000:1488 mnist-service
-
 # docker run --rm -p 8000:1488 -v D:\Projects\fastapi_torch\model:/app/model -v D:\Projects\fastapi_torch\images:/app/images mnist-service
 
 # docker build -t mnist-service .
