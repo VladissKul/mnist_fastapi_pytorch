@@ -41,7 +41,7 @@ class RequestInput(BaseModel):
 
 @app.get("/")
 async def index():
-    return {"Message": ["Hello World"]}
+    return {"Message": ["Hello Main"]}
 
 
 @app.post("/predict")
